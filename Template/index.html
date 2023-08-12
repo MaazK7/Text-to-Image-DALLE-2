@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Generator</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 28px;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      color: #666;
+      font-size: 18px;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    button[type="submit"] {
+      padding: 8px 16px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    #imageContainer {
+      margin-top: 20px;
+    }
+
+    #generatedImage {
+      max-width: 400px;
+      height: auto;
+    }
+
+    #captionText {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image Generator</h1>
+    <form id="captionForm">
+      <label for="captionInput">Enter Caption:</label>
+      <br>
+      <input type="text" id="captionInput" required>
+      <br>
+      <button type="submit">Generate Image</button>
+    </form>
+    <br>
+    <div id="imageContainer">
+      <img id="generatedImage" alt="Generated Image">
+      <p id="captionText"></p>
+    </div>
+  </div>
+
+  <script>
+    // Function to handle form submission
+    function generateImage(event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Get the caption input value
+      var caption = document.getElementById('captionInput').value;
+
+      // Create a new XMLHttpRequest object
+      var xhr = new XMLHttpRequest();
+
+      // Configure the request
+      xhr.open('POST', '/generate_image');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
+      // Define the request payload
+      var payload = JSON.stringify({
+        caption: caption
+      });
+
+      // Set up the callback function to handle the response
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          // Parse the response JSON
+          var response = JSON.parse(xhr.responseText);
+
+          // Set the image source
+          var imageElement = document.getElementById('generatedImage');
+          imageElement.src = response.image_url;
+          imageElement.alt = 'Generated Image';
+
+          // Set the caption text
+          var captionElement = document.getElementById('captionText');
+          captionElement.textContent = caption;
+        }
+      };
+
+      // Send the request
+      xhr.send(payload);
+    }
+
+    // Add event listener to the form
+    var formElement = document.getElementById('captionForm');
+    formElement.addEventListener('submit', generateImage);
+  </script>
+</body>
+</html>
