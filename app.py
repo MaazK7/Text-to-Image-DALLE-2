@@ -1,7 +1,9 @@
 import openai
-openai.api_key = "" #Enter your OPEN-AI key
 from flask import Flask, render_template, request, jsonify
-app = Flask(__name__,template_folder='Template')
+
+openai.api_key = ""  # Enter your OPEN-AI key
+
+app = Flask(__name__, template_folder='Template')
 
 @app.route('/')
 def index():
@@ -22,8 +24,10 @@ def generate_image_from_caption(caption):
     # Implement your code to generate the image from the caption here
     # Return the image URL or file path
     response = openai.Image.create(
-    prompt=caption,n=1,
+    prompt=caption, n=1,
     size="512x512")
     image_url = response['data'][0]['url']
     return image_url
-app.run(debug=False, host="0.0.0.0", port=0, threaded=True)
+
+if __name__ == '__main__':
+    app.run(debug=False, host="0.0.0.0", port=5001, threaded=True)
